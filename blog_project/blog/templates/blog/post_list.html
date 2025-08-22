@@ -1,0 +1,49 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Recent Posts{% endblock %}
+
+{% block content %}
+
+    <!-- The main header for the page, consistent with other pages -->
+    <div class="page-header">
+        <h1 class="page-title">Recent Posts</h1>
+        <!-- The "Create Post" button is now part of the header in base.html, so we don't need it here -->
+    </div>
+
+    <!-- Container for the list of post cards -->
+    <div class="post-list">
+        {% for post in posts %}
+            <!-- Each post is a self-contained, styled "card" -->
+            <article class="post-card">
+                <header>
+                    <h2 class="post-card-title">
+                        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                    </h2>
+                    <div class="post-meta">
+                        <span>Published on {{ post.created_at|date:"F d, Y" }}</span>
+                        {% if post.category %}
+                            <span>&bull; In {{ post.category.name }}</span>
+                        {% endif %}
+                    </div>
+                </header>
+                <div class="post-card-excerpt">
+                    <p>{{ post.content|truncatewords:35 }}</p>
+                </div>
+                <footer class="post-card-footer">
+                    <a href="{{ post.get_absolute_url }}" class="read-more">Read More &rarr;</a>
+                </footer>
+            </article>
+        
+        {% empty %}
+            <!-- A more elegant and helpful message for when there are no posts -->
+            <div class="empty-state-card" style="background-color: #fff; border-radius: 12px; padding: 3rem; text-align: center; box-shadow: 0 4px 15px rgba(20, 3, 66, 0.05);">
+                <h2 style="font-family: 'Poppins', sans-serif; font-size: 1.75rem; margin-bottom: 1rem;">Your Blog Awaits!</h2>
+                <p style="color: #828282; max-width: 400px; margin: 0 auto 1.5rem;">It looks like you haven't published any posts yet. Time to share your first story with the world.</p>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'post_create' %}" class="btn">Create Your First Post</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Create a New Post{% endblock %}
+
+{% block content %}
+
+    <div class="page-header">
+        <h1 class="page-title">Create a New Post</h1>
+    </div>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- 
+        Looping through each field manually gives us complete control 
+        over the HTML structure for professional styling, 
+        unlike the basic {{ form.as_p }}.
+        -->
+        {% for field in form %}
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                    <small style="color: #828282; display: block; margin-top: 5px;">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <p style="color: #dc3545; font-size: 0.9rem; margin-top: 5px;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <div class="form-actions" style="margin-top: 2rem;">
+            <button type="submit" class="btn">Publish Post</button>
+        </div>
+    </form>
+
+{% endblock %}

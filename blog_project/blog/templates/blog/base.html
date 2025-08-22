@@ -1,0 +1,243 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Blog{% endblock %} - Online Blog System</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ========================================
+        SPECTACULAR DESIGN SYSTEM V2
+        ======================================== */
+        :root {
+            --color-glow-1: #6a11cb;
+            --color-glow-2: #2575fc;
+            --color-glow-3: #ec008c;
+            --color-glass-bg: rgba(255, 255, 255, 0.1);
+            --color-glass-border: rgba(255, 255, 255, 0.2);
+            --color-text: #EAEBF2;
+            --color-text-muted: #A9B2C8;
+            --color-heading: #FFFFFF;
+
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            
+            --animation-speed: 0.3s;
+            --border-radius: 16px;
+        }
+
+        /* ========================================
+        GLOBAL STYLES & ANIMATED BACKGROUND
+        ======================================== */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @keyframes backgroundPan {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text);
+            line-height: 1.7;
+            background: linear-gradient(135deg, #0d0d2b, #1e1e3d, #3c1e5a);
+            background-size: 400% 400%;
+            animation: backgroundPan 15s ease infinite;
+            overflow-x: hidden;
+        }
+        
+        /* ========================================
+        LAYOUT & GLASSMORPHISM COMPONENTS
+        ======================================== */
+        .site-header, .post-card, .post-detail, .empty-state-card, form {
+            background: var(--color-glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px); /* For Safari */
+            border: 1px solid var(--color-glass-border);
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .site-header {
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            margin: 1rem auto;
+            max-width: calc(1100px + 2rem);
+            border-radius: 50px;
+        }
+
+        .main-content {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 20px;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========================================
+        ADVANCED STYLING & HOVER EFFECTS
+        ======================================== */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            color: var(--color-heading);
+            font-weight: 700;
+        }
+        
+        a {
+            color: var(--color-heading);
+            text-decoration: none;
+            position: relative;
+        }
+        
+        .post-card-title a:after, .read-more:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background: linear-gradient(90deg, var(--color-glow-2), var(--color-glow-3));
+            transition: width var(--animation-speed) ease;
+        }
+
+        .post-card-title a:hover:after, .read-more:hover:after {
+            width: 100%;
+        }
+        
+        .site-title a { font-size: 1.5rem; }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--color-glow-2), var(--color-glow-1));
+            color: white !important;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all var(--animation-speed) ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .post-card {
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: transform var(--animation-speed) ease;
+        }
+
+        .post-card:before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.15), transparent 20%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .post-card:hover:before {
+            opacity: 1;
+        }
+
+        .post-card:hover { transform: scale(1.02); }
+        .post-card-title { font-size: 1.75rem; margin-bottom: 0.5rem; }
+        .post-meta { color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 1rem; }
+        .read-more { font-weight: 600; }
+        .page-title { font-size: 3rem; margin-bottom: 2rem; text-align: center; }
+
+        .post-detail { padding: 3rem; }
+        .post-detail-title { font-size: 3.5rem; line-height: 1.2; text-align: center; margin-bottom: 1rem; }
+        .post-detail .post-meta { text-align: center; font-size: 1rem; }
+        .post-content { font-size: 1.1rem; color: var(--color-text); margin-top: 2rem; }
+        
+        .tag {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--color-text-muted);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-right: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        form { padding: 2rem; }
+        form label { font-weight: 600; margin-bottom: 8px; display: block; }
+        input[type="text"], textarea, select {
+            width: 100%; padding: 12px; border: 1px solid var(--color-glass-border); border-radius: 8px;
+            font-family: var(--font-body); font-size: 1rem; margin-bottom: 1.5rem;
+            background: rgba(0, 0, 0, 0.2); color: var(--color-text);
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none; border-color: var(--color-glow-2);
+        }
+        
+        .site-footer { text-align: center; padding: 4rem 2rem; color: var(--color-text-muted); }
+        
+        @media (max-width: 768px) {
+            .site-header { padding: 1rem; border-radius: 30px; margin: 0.5rem; }
+            .page-title, .post-detail-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <nav class="navbar">
+            <div class="site-title"><a href="{% url 'post_list' %}">Online Blog System</a></div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'post_create' %}" class="btn">+ Create Post</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2025 Online Blog System. A Custom Design Experience.</p>
+    </footer>
+
+    <script>
+        document.querySelectorAll('.post-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--x', `${x}px`);
+                card.style.setProperty('--y', `${y}px`);
+            });
+        });
+    </script>
+
+</body>
+</html>
